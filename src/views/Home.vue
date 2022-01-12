@@ -6,7 +6,7 @@
           <v-sheet color="#D3E4F4" height="66px" class="px-6 py-3">
             <div class="d-flex justify-center align-center">
               <div class="d-flex">
-               <CreateGroup />
+                <CreateGroup />
                 <CreateGoods />
               </div>
               <v-spacer></v-spacer>
@@ -38,6 +38,7 @@
                       </th>
                     </tr>
                   </thead>
+
                   <tbody>
                     <tr v-for="item in desserts" :key="item.name">
                       <td class="first__row">
@@ -67,14 +68,14 @@
 </template>
 
 <script>
-import CreateGroup from "../components/Dialogs/CreateGroup.vue"
-import CreateGoods from "../components/Dialogs/CreateGoods.vue"
+import CreateGroup from "../components/Dialogs/CreateGroup.vue";
+import CreateGoods from "../components/Dialogs/CreateGoods.vue";
 export default {
   name: "Home",
 
   components: {
     CreateGoods,
-    CreateGroup
+    CreateGroup,
   },
 
   data: () => ({
@@ -127,10 +128,8 @@ export default {
 </script>
 
 <style scoped>
-.custom__btn {
-  height: 50px;
-  width: 249px;
-  border-radius: 8px;
+.custom__body {
+  border-left: solid 2px #547da9;
 }
 
 .custom__field {
@@ -140,13 +139,12 @@ export default {
   border-radius: 8px;
 }
 .first__row {
-  /* background: rgba(211, 228, 244, 0.5); */
   background: rgba(211, 228, 244, 0.33);
   width: 80%;
-  border-color: transparent;
+
   border-bottom-style: hidden;
   border-right-style: hidden;
-  border-left-style: hidden;
+  border-left: solid 3px #547da9;
 }
 
 td {
