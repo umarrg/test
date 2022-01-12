@@ -37,6 +37,7 @@
                 outlined
                 background-color="#EEF4FA"
                 height="45px"
+                v-model="form.name"
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" class="py-0">
@@ -45,6 +46,7 @@
                 outlined
                 background-color="#EEF4FA"
                 height="45px"
+                v-model="form.vendorcode"
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" class="py-0">
@@ -53,15 +55,19 @@
                 outlined
                 background-color="#EEF4FA"
                 height="45px"
+                v-model="form.eancode"
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" class="py-0">
               <span class="primary--text">Group of Goods</span>
               <v-select
-                :items="['Goods']"
+                :items="groups"
+                item-text="name"
+                item-value="id"
                 outlined
                 background-color="#EEF4FA"
                 height="45px"
+                v-model="form.group"
               ></v-select>
             </v-col>
             <v-col cols="12" sm="6" class="py-0">
@@ -70,6 +76,7 @@
                 outlined
                 background-color="#EEF4FA"
                 height="45px"
+                v-model="form.pricepurchase"
               ></v-text-field>
             </v-col>
 
@@ -79,6 +86,7 @@
                 outlined
                 background-color="#EEF4FA"
                 height="45px"
+                v-model="form.saleprice"
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" class="py-0">
@@ -88,6 +96,7 @@
                 outlined
                 background-color="#EEF4FA"
                 height="45px"
+                v-model="form.tax"
               ></v-select>
             </v-col>
             <v-col cols="12" sm="6" class="py-0">
@@ -97,6 +106,7 @@
                 outlined
                 background-color="#EEF4FA"
                 height="45px"
+                v-model="form.type"
               ></v-select>
             </v-col>
           </v-row>
@@ -107,8 +117,10 @@
         <v-btn
           color="primary"
           width="254px"
+          :loading="loading"
+          :disabled="loading"
           height="50px"
-          @click="dialog = false"
+          @click="save()"
           class="mb-5"
         >
           Save
@@ -119,10 +131,59 @@
   </v-dialog>
 </template>
 <script>
+import * as fb from "../../Services/db";
+
 export default {
   data: () => ({
     dialog: false,
+    form: {
+      name: "",
+      tax: "",
+      saleprice: "",
+      pricepurchase: "",
+      type: "",
+      group: "",
+      eancode: "",
+      vendorcode: "",
+    },
+    groups: [],
+    loading: false,
   }),
+  methods: {
+    save() {
+      this.loading = true;
+      fb.groupCollection
+        .doc(this.form.group)
+        .collection("goods")
+        .add(this.form)
+        .then((res) => {
+          (this.loading = false), console.log(res, "message sent successfully");
+          this.$router.go();
+        })
+        .catch((err) => {
+          alert(err)((this.loading = false)), console.log(err);
+        });
+    },
+    readGroup() {
+      fb.groupCollection
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            let data = {
+              id: doc.id,
+              name: doc.data().name,
+            };
+            this.groups.push(data);
+          });
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+    },
+  },
+  mounted() {
+    this.readGroup();
+  },
 };
 </script>
 

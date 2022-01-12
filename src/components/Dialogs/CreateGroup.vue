@@ -1,5 +1,10 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="700px" overlay-color="secondary">
+  <v-dialog
+    v-model="dialog"
+    persistent
+    max-width="700px"
+    overlay-color="secondary"
+  >
     <template v-slot:activator="{ on, attrs }">
       <v-btn
         color="secondary"
@@ -19,7 +24,9 @@
         </v-btn>
       </div>
       <div class="text-center">
-        <span class="text-h6 font-weight-bold primary--text mb-4" >Create a groupe</span>
+        <span class="text-h6 font-weight-bold primary--text mb-4"
+          >Create a groupe</span
+        >
       </div>
       <v-card-text>
         <v-container>
@@ -30,6 +37,7 @@
                 outlined
                 background-color="#EEF4FA"
                 height="45px"
+                v-model="name"
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" class="py-0">
@@ -38,6 +46,7 @@
                 outlined
                 background-color="#EEF4FA"
                 height="45px"
+                v-model="parent"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -49,7 +58,9 @@
           color="primary"
           width="254px"
           height="50px"
-          @click="dialog = false"
+          @click="save()"
+          :loading="loading"
+          :disabled="loading"
           class="mb-5"
         >
           Save
@@ -60,10 +71,33 @@
   </v-dialog>
 </template>
 <script>
+import * as fb from "../../Services/db";
 export default {
   data: () => ({
     dialog: false,
+    name: "",
+    parent: "",
+    loading: false,
   }),
+
+  methods: {
+    save() {
+      this.loading = true;
+      const data = {
+        name: this.name,
+        Parrentsgroupe: this.parent,
+      };
+      fb.groupCollection
+        .add(data)
+        .then((res) => {
+          (this.loading = false), console.log(res, "message sent successfully");
+          this.$router.go();
+        })
+        .catch((err) => {
+          alert(err)((this.loading = false)), console.log(err);
+        });
+    },
+  },
 };
 </script>
 
@@ -78,7 +112,7 @@ export default {
 }
 
 .border {
-    color: black;
-    background-color: white;
+  color: black;
+  background-color: white;
 }
 </style>
